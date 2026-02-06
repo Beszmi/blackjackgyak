@@ -30,10 +30,10 @@ public class Game {
         player.addCard(ch.getCards().getFirst());
         ch.removeCard(0);
 
-        frame.addLabelIntoNumberedPanel(0,card1);
-        frame.addLabelIntoNumberedPanel(0,uresKaryta);
+        frame.addLabelIntoNumberedPanel("top1",card1);
+        frame.addLabelIntoNumberedPanel("top1",uresKaryta);
 
-        frame.addLabelIntoNumberedPanel(2,card2);
+        frame.addLabelIntoNumberedPanel("bottom",card2);
         updateAll();
     }
 
@@ -95,7 +95,7 @@ public class Game {
         CardLabel card = new CardLabel(ch.getCards().getFirst());
         player.addCard(ch.getCards().getFirst());
         ch.removeCard(0);
-        frame.addLabelIntoNumberedPanel(2,card);
+        frame.addLabelIntoNumberedPanel("bottom",card);
         updatePlayerValue();
         SwingUtilities.updateComponentTreeUI(frame);
     }
@@ -104,7 +104,7 @@ public class Game {
         CardLabel card = new CardLabel(ch.getCards().getFirst());
         dealer.addCard(ch.getCards().getFirst());
         ch.removeCard(0);
-        frame.addLabelIntoNumberedPanel(0,card);
+        frame.addLabelIntoNumberedPanel("top1",card);
         updatePlayerValue();
         SwingUtilities.updateComponentTreeUI(frame);
     }
