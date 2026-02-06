@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class CardHolder {
@@ -16,16 +17,16 @@ public class CardHolder {
     }
 
     public void shuffleCards(Random generator) {
-        ArrayList<Card> new_array = new ArrayList<Card>();
+        ArrayList<Card> newArray = new ArrayList<>();
         for (int i = 0; i < 56; i++) {
-            int random_num = generator.nextInt(cards.size());
-            new_array.add(cards.get(random_num));
-            cards.remove(random_num);
+            int randomNum = generator.nextInt(cards.size());
+            newArray.add(cards.get(randomNum));
+            cards.remove(randomNum);
         }
-        cards = new_array;
+        cards = newArray;
     }
 
-    public ArrayList<Card> getCards() {
+    public List<Card> getCards() {
         return cards;
     }
 
@@ -42,8 +43,7 @@ public class CardHolder {
         String str = "";
         int counter = 0;
         for (Card card : cards) {
-            str += counter++ + " " + card.toString();
-            str += "\n";
+            str = counter++ + " " + card.toString() + "\n";
         }
         return str;
     }

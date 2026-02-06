@@ -84,6 +84,21 @@ public class Game {
         }
     }
 
+    public int finalValue(int value, int aceCount) {
+        if (aceCount > 21) {
+            return value;
+        }
+
+        //Calculates the value with aces upto the amount of aces in hand quits at the first one that is a bust.
+        int fValue = value;
+        for (int i = 1; i <= aceCount; i++) {
+            if (value + i*10 <= 21) {
+                fValue = value + i*10;
+            }
+        }
+        return fValue;
+    }
+
     public String displayValue(int value, int aceCount) {
         if (aceCount > 0) {
             return value + "/" + calculateSoftValue(value, aceCount);
@@ -105,13 +120,52 @@ public class Game {
         dealer.addCard(ch.getCards().getFirst());
         ch.removeCard(0);
         frame.addLabelIntoNumberedPanel("top1",card);
-        updatePlayerValue();
+        updateDealerValue();
         SwingUtilities.updateComponentTreeUI(frame);
     }
 
     public void dealerAi() {
+        frame.removeHiddenCard();
+        SwingUtilities.updateComponentTreeUI(frame);
         while (calculateSoftValue(dealerValue, dealerAceCount) < 17) {
             dealerHit();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                System.out.println("Thread.sleep error");
+            }
         }
+        resultLogic();
+    }
+
+    public void resultLogic() {
+        if (finalValue(playerValue, playerAceCount) > 21) {
+            System.out.println("bust");
+            lose();
+        } else if (finalValue(dealerValue, dealerAceCount) > 21) {
+            System.out.println("dealer bust");
+            win();
+        } else if (finalValue(dealerValue, dealerAceCount) < finalValue(playerValue, playerAceCount)) {
+            System.out.println("regular win");
+            win();
+        } else if (finalValue(dealerValue, dealerAceCount) > finalValue(playerValue, playerAceCount)) {
+            System.out.println("regular lose");
+            lose();
+        } else if (finalValue(dealerValue, dealerAceCount) == finalValue(playerValue, playerAceCount)) {
+            System.out.println("draw");
+            draw();
+        }
+    }
+
+    public void win() {
+        frame.showCard("winCard");
+    }
+
+    public void draw() {
+        frame.showCard("drawCard");
+    }
+
+    public void lose() {
+        frame.showCard("loseCard");
     }
 }

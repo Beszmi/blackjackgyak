@@ -7,12 +7,12 @@ public class Card {
         DIAMONDS,
         SPADES,
         CLUBS
-    };
+    }
     private final Suit suit;
 
-    Card(int value, int suit_in) {
+    Card(int value, int suitIn) {
         this.value = value;
-        switch(suit_in) {
+        switch(suitIn) {
             case 0: this.suit = Suit.HEARTS;
             break;
             case 1: this.suit = Suit.DIAMONDS;
@@ -22,28 +22,14 @@ public class Card {
             case 3: this.suit = Suit.CLUBS;
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + suit_in);
+                throw new IllegalStateException("Unexpected value: " + suitIn);
         }
     }
     public int getValue() {
         return value;
     }
-    public void setValue(int value) {
-        value = value;
-    }
-    public Suit getSuit() {
-        return suit;
-    }
-    public void setSuit(int suit) {}
     @Override
     public String toString() {
-        String name;
         return value + " " + suit;
-    }
-    @Override
-    public boolean equals(Object o) {
-        Card card = (Card)o;
-        if (this.value == card.getValue() && this.suit == card.getSuit()) return true;
-        return false;
     }
 }
