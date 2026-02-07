@@ -2,9 +2,12 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 
 public class SpecialFrame extends JFrame{
+    //Used to avoid replicated code used only to make replicas of buttons
     protected class ResetButton extends JButton{
         public ResetButton(){
             super("Reset");
@@ -21,7 +24,6 @@ public class SpecialFrame extends JFrame{
     private JPanel winCard = new JPanel(new GridBagLayout());
     private JPanel drawCard = new JPanel(new GridBagLayout());
     private JPanel loseCard = new JPanel(new GridBagLayout());
-
     public Game game;
 
     public SpecialFrame() {
@@ -31,8 +33,16 @@ public class SpecialFrame extends JFrame{
         ImageIcon icon = new ImageIcon("src/main/resources/fetchimage.png");
         this.setIconImage(icon.getImage());
 
-        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
         this.setResizable(false);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                game.savePlayerData();
+                System.exit(0);
+            }
+        });
 
         //Buttons
         buttons.put("hitButton", new JButton("Hit"));
@@ -150,16 +160,19 @@ public class SpecialFrame extends JFrame{
         panels.get(panelName).add(label);
     }
 
+    //Used to reset the screen after a game is restarted/finished
     public void reset() {
         panels.get("top1").removeAll();
         panels.get("bottom").removeAll();
         cl.show(mainpanel, "gameCard");
     }
 
+    //Abstracts the call to show cards in the layout
     public void showCard(String name) {
         cl.show(mainpanel, name);
     }
 
+    //Removes the dealers unrevealed cards visual representation
     public void removeHiddenCard() {
         panels.get("top1").remove(1);
     }

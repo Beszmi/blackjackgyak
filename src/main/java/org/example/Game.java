@@ -2,12 +2,14 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Game {
     Random random = new Random();
     private SpecialFrame frame;
     private CardHolder ch = new CardHolder();
+    private HashMap<String, Player> players = new HashMap<>();
     private CardHolder player = new CardHolder();
     private CardHolder dealer = new CardHolder();
     private int playerValue = 0;
@@ -19,6 +21,7 @@ public class Game {
         frame = sajatFrame;
     }
     public void setup() {
+        players = Player.deSerializePlayers();
         ch.fillCards();
         ch.shuffleCards(random);
 
@@ -166,5 +169,9 @@ public class Game {
 
     public void lose() {
         frame.showCard("loseCard");
+    }
+
+    public void savePlayerData() {
+        Player.serializePlayers(players);
     }
 }
