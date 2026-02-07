@@ -126,11 +126,10 @@ public class Game {
 
     public void dealerAi() {
         frame.removeHiddenCard();
-        SwingUtilities.updateComponentTreeUI(frame);
         while (calculateSoftValue(dealerValue, dealerAceCount) < 17) {
             dealerHit();
             try {
-                Thread.sleep(5000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 System.out.println("Thread.sleep error");
             }

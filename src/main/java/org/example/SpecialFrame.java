@@ -5,8 +5,17 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class SpecialFrame extends JFrame{
+    protected class ResetButton extends JButton{
+        public ResetButton(){
+            super("Reset");
+            setFocusable(false);
+            setAlignmentX(Component.CENTER_ALIGNMENT);
+            addActionListener(e -> game.reset());
+        }
+    }
     private CardLayout cl = new CardLayout();
     private HashMap<String, JPanel> panels = new HashMap<>();
+    private HashMap<String, JButton> buttons = new HashMap<>();
     private JPanel mainpanel = new JPanel(cl);
     private JPanel gameCard = new JPanel();
     private JPanel winCard = new JPanel(new GridBagLayout());
@@ -26,24 +35,18 @@ public class SpecialFrame extends JFrame{
         this.setResizable(false);
 
         //Buttons
-        JButton hitButton = new JButton("Hit");
-        hitButton.setHorizontalAlignment(SwingConstants.RIGHT);
-        hitButton.setFocusable(false);
-        hitButton.addActionListener(e -> game.playerHit());
+        buttons.put("hitButton", new JButton("Hit"));
+        buttons.get("hitButton").setFocusable(false);
+        buttons.get("hitButton").addActionListener(e -> game.playerHit());
 
-        JButton standButton = new JButton("Stand");
-        hitButton.setFocusable(false);
-        standButton.setHorizontalAlignment(SwingConstants.RIGHT);
-        standButton.addActionListener(e -> game.dealerAi());
+        buttons.put("standButton", new JButton("Stand"));
+        buttons.get("standButton").setFocusable(false);
+        buttons.get("standButton").addActionListener(e -> game.dealerAi());
 
-        JButton resetButton1 = new JButton("Reset");
-        resetButton1.setFocusable(false);
-        resetButton1.addActionListener(e -> game.reset());
-
-        JButton resetButton2 = new JButton("Reset");
-        resetButton2.setFocusable(false);
-        resetButton2.setAlignmentX(Component.CENTER_ALIGNMENT);
-        resetButton2.addActionListener(e -> game.reset());
+        buttons.put("reset1Button", new ResetButton());
+        buttons.put("reset2Button", new ResetButton());
+        buttons.put("reset3Button", new ResetButton());
+        buttons.put("reset4Button", new ResetButton());
 
         //Labels
         JLabel winText = new JLabel("VICTORY!");
@@ -70,9 +73,9 @@ public class SpecialFrame extends JFrame{
         JPanel top2 = new JPanel();
         top2.setBackground(Color.blue);
         top2.setPreferredSize(new Dimension(200, 300));
-        top2.add(hitButton);
-        top2.add(standButton);
-        top2.add(resetButton1);
+        top2.add(buttons.get("hitButton"));
+        top2.add(buttons.get("standButton"));
+        top2.add(buttons.get("reset1Button"));
         panels.put("top2", top2);
 
         JPanel bottom= new JPanel();
@@ -87,7 +90,7 @@ public class SpecialFrame extends JFrame{
         winPanel.setPreferredSize(new Dimension(1280, 720));
         winPanel.add(winText);
         winPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        winPanel.add(resetButton2);
+        winPanel.add(buttons.get("reset2Button"));
         panels.put("winPanel", winPanel);
 
         JPanel drawPanel = new JPanel();
@@ -97,7 +100,7 @@ public class SpecialFrame extends JFrame{
         drawPanel.setPreferredSize(new Dimension(1280, 720));
         drawPanel.add(drawText);
         drawPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        drawPanel.add(resetButton2);
+        drawPanel.add(buttons.get("reset3Button"));
         panels.put("drawPanel", drawPanel);
 
         JPanel losePanel = new JPanel();
@@ -107,7 +110,7 @@ public class SpecialFrame extends JFrame{
         losePanel.setPreferredSize(new Dimension(1280, 720));
         losePanel.add(loseText);
         losePanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        losePanel.add(resetButton2);
+        losePanel.add(buttons.get("reset4Button"));
         panels.put("losePanel", losePanel);
 
         //Cards
