@@ -30,14 +30,26 @@ public class Player implements Serializable {
     public int getChips() {
         return chips;
     }
+    public void setChips(int chips) {
+        this.chips = chips;
+    }
     public int getWins() {
         return wins;
+    }
+    public void setWins(int wins) {
+        this.wins = wins;
     }
     public int getDraws() {
         return draws;
     }
+    public void setDraws(int draws) {
+        this.draws = draws;
+    }
     public int getLosses() {
         return losses;
+    }
+    public void setLosses(int losses) {
+        this.losses = losses;
     }
 
     public static void serializePlayers(Map<String, Player> players) {

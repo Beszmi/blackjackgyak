@@ -19,14 +19,11 @@ public class SpecialFrame extends JFrame{
     private CardLayout cl = new CardLayout();
     private HashMap<String, JPanel> panels = new HashMap<>();
     private HashMap<String, JButton> buttons = new HashMap<>();
-    private JPanel mainpanel = new JPanel(cl);
-    private JPanel gameCard = new JPanel();
-    private JPanel winCard = new JPanel(new GridBagLayout());
-    private JPanel drawCard = new JPanel(new GridBagLayout());
-    private JPanel loseCard = new JPanel(new GridBagLayout());
+    private HashMap<String, JLabel> labels = new HashMap<>();
     public Game game;
 
     public SpecialFrame() {
+        panels.put("mainPanel", new JPanel(cl));
         this.setSize(1280, 720);
         this.setTitle("BlackJack");
 
@@ -59,20 +56,20 @@ public class SpecialFrame extends JFrame{
         buttons.put("reset4Button", new ResetButton());
 
         //Labels
-        JLabel winText = new JLabel("VICTORY!");
-        winText.setFocusable(false);
-        winText.setAlignmentX(Component.CENTER_ALIGNMENT);
-        winText.setFont(new Font("Arial", Font.BOLD, 72));
+        labels.put("winLabel", new JLabel("VICTORY!"));
+        labels.get("winLabel").setFocusable(false);
+        labels.get("winLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
+        labels.get("winLabel").setFont(new Font("Arial", Font.BOLD, 72));
 
-        JLabel drawText = new JLabel("DRAW!");
-        drawText.setFocusable(false);
-        drawText.setAlignmentX(Component.CENTER_ALIGNMENT);
-        drawText.setFont(new Font("Arial", Font.BOLD, 72));
+        labels.put("drawLabel", new JLabel("DRAW!"));
+        labels.get("drawLabel").setFocusable(false);
+        labels.get("drawLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
+        labels.get("drawLabel").setFont(new Font("Arial", Font.BOLD, 72));
 
-        JLabel loseText = new JLabel("LOSE!");
-        loseText.setFocusable(false);
-        loseText.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loseText.setFont(new Font("Arial", Font.BOLD, 72));
+        labels.put("loseLabel", new JLabel("LOSE!"));
+        labels.get("loseLabel").setFocusable(false);
+        labels.get("loseLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
+        labels.get("loseLabel").setFont(new Font("Arial", Font.BOLD, 72));
 
         //Panels
         JPanel top1 = new JPanel();
@@ -88,68 +85,70 @@ public class SpecialFrame extends JFrame{
         top2.add(buttons.get("reset1Button"));
         panels.put("top2", top2);
 
-        JPanel bottom= new JPanel();
-        bottom.setBackground(Color.green);
-        bottom.setPreferredSize(new Dimension(1280, 360));
-        panels.put("bottom", bottom);
+        panels.put("bottom", new JPanel());
+        panels.get("bottom").setBackground(Color.green);
+        panels.get("bottom").setPreferredSize(new Dimension(1280, 360));
 
-        JPanel winPanel = new JPanel();
-        winPanel.setLayout(new BoxLayout(winPanel, BoxLayout.Y_AXIS));
-        winPanel.setBackground(Color.green);
-        winPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        winPanel.setPreferredSize(new Dimension(1280, 720));
-        winPanel.add(winText);
-        winPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        winPanel.add(buttons.get("reset2Button"));
-        panels.put("winPanel", winPanel);
+        panels.put("winPanel", new JPanel());
+        panels.get("winPanel").setLayout(new BoxLayout(panels.get("winPanel"), BoxLayout.Y_AXIS));
+        panels.get("winPanel").setBackground(Color.green);
+        panels.get("winPanel").setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panels.get("winPanel").setPreferredSize(new Dimension(1280, 720));
+        panels.get("winPanel").add(labels.get("winLabel"));
+        panels.get("winPanel").add(Box.createRigidArea(new Dimension(0, 10)));
+        panels.get("winPanel").add(buttons.get("reset2Button"));
 
-        JPanel drawPanel = new JPanel();
-        drawPanel.setLayout(new BoxLayout(drawPanel, BoxLayout.Y_AXIS));
-        drawPanel.setBackground(Color.blue);
-        drawPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        drawPanel.setPreferredSize(new Dimension(1280, 720));
-        drawPanel.add(drawText);
-        drawPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        drawPanel.add(buttons.get("reset3Button"));
-        panels.put("drawPanel", drawPanel);
+        panels.put("drawPanel", new JPanel());
+        panels.get("drawPanel").setLayout(new BoxLayout(panels.get("drawPanel"), BoxLayout.Y_AXIS));
+        panels.get("drawPanel").setBackground(Color.blue);
+        panels.get("drawPanel").setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panels.get("drawPanel").setPreferredSize(new Dimension(1280, 720));
+        panels.get("drawPanel").add(labels.get("drawLabel"));
+        panels.get("drawPanel").add(Box.createRigidArea(new Dimension(0, 10)));
+        panels.get("drawPanel").add(buttons.get("reset3Button"));
 
-        JPanel losePanel = new JPanel();
-        losePanel.setLayout(new BoxLayout(losePanel, BoxLayout.Y_AXIS));
-        losePanel.setBackground(Color.red);
-        losePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        losePanel.setPreferredSize(new Dimension(1280, 720));
-        losePanel.add(loseText);
-        losePanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        losePanel.add(buttons.get("reset4Button"));
-        panels.put("losePanel", losePanel);
+        panels.put("losePanel", new JPanel());
+        panels.get("losePanel").setLayout(new BoxLayout(panels.get("losePanel"), BoxLayout.Y_AXIS));
+        panels.get("losePanel").setBackground(Color.red);
+        panels.get("losePanel").setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panels.get("losePanel").setPreferredSize(new Dimension(1280, 720));
+        panels.get("losePanel").add(labels.get("loseLabel"));
+        panels.get("losePanel").add(Box.createRigidArea(new Dimension(0, 10)));
+        panels.get("losePanel").add(buttons.get("reset4Button"));
 
         //Cards
-        gameCard.setBackground(Color.black);
-        gameCard.add(panels.get("top1"));
-        gameCard.add(panels.get("top2"));
-        gameCard.add(panels.get("bottom"));
-        gameCard.setBounds(0,0,1280,720);
+        panels.put("mainPanel", new JPanel(cl));
 
-        winCard.setBackground(Color.LIGHT_GRAY);
-        winCard.add(panels.get("winPanel"));
-        winCard.setBounds(0,0,1280,720);
+        panels.put("gameCard", new JPanel());
+        panels.get("gameCard").setBackground(Color.black);
+        panels.get("gameCard").add(panels.get("top1"));
+        panels.get("gameCard").add(panels.get("top2"));
+        panels.get("gameCard").add(panels.get("bottom"));
+        panels.get("gameCard").setBounds(0,0,1280,720);
 
-        drawCard.setBackground(Color.LIGHT_GRAY);
-        drawCard.add(panels.get("drawPanel"));
-        drawCard.setBounds(0,0,1280,720);
+        panels.put("winCard", new JPanel(new GridBagLayout()));
+        panels.get("winCard").setBackground(Color.LIGHT_GRAY);
+        panels.get("winCard").add(panels.get("winPanel"));
+        panels.get("winCard").setBounds(0,0,1280,720);
 
-        loseCard.setBackground(Color.LIGHT_GRAY);
-        loseCard.add(panels.get("losePanel"));
-        loseCard.setBounds(0,0,1280,720);
+        panels.put("drawCard", new JPanel(new GridBagLayout()));
+        panels.get("drawCard").setBackground(Color.LIGHT_GRAY);
+        panels.get("drawCard").add(panels.get("drawPanel"));
+        panels.get("drawCard").setBounds(0,0,1280,720);
 
-        mainpanel.add("gameCard", gameCard);
-        mainpanel.add("winCard", winCard);
-        mainpanel.add("drawCard", drawCard);
-        mainpanel.add("loseCard", loseCard);
+        panels.put("loseCard", new JPanel(new GridBagLayout()));
+        panels.get("loseCard").setBackground(Color.LIGHT_GRAY);
+        panels.get("loseCard").add(panels.get("losePanel"));
+        panels.get("loseCard").setBounds(0,0,1280,720);
 
-        cl.show(mainpanel, "gameCard");
+        panels.get("mainPanel").add("gameCard", panels.get("gameCard"));
+        panels.get("mainPanel").add("winCard", panels.get("winCard"));
+        panels.get("mainPanel").add("drawCard", panels.get("drawCard"));
+        panels.get("mainPanel").add("loseCard", panels.get("loseCard"));
 
-        add(mainpanel);
+        cl.show(panels.get("mainPanel"), "gameCard");
+
+        add(panels.get("mainPanel"));
     }
 
     public void setupGameConnection(Game game) {
@@ -164,12 +163,12 @@ public class SpecialFrame extends JFrame{
     public void reset() {
         panels.get("top1").removeAll();
         panels.get("bottom").removeAll();
-        cl.show(mainpanel, "gameCard");
+        cl.show(panels.get("mainPanel"), "gameCard");
     }
 
     //Abstracts the call to show cards in the layout
     public void showCard(String name) {
-        cl.show(mainpanel, name);
+        cl.show(panels.get("mainPanel"), name);
     }
 
     //Removes the dealers unrevealed cards visual representation

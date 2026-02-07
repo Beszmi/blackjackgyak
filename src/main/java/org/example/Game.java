@@ -5,23 +5,29 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Random;
 
+import static java.lang.Math.round;
+import static java.lang.Math.toIntExact;
+
 public class Game {
     Random random = new Random();
     private SpecialFrame frame;
     private CardHolder ch = new CardHolder();
     private HashMap<String, Player> players = new HashMap<>();
-    private CardHolder player = new CardHolder();
+    private Player currentPlayer;
+    private CardHolder playersCards = new CardHolder();
     private CardHolder dealer = new CardHolder();
     private int playerValue = 0;
     private int dealerValue = 0;
     private int playerAceCount = 0;
     private int dealerAceCount = 0;
+    private int betAmount = 10;
 
     public Game(SpecialFrame sajatFrame) {
         frame = sajatFrame;
     }
     public void setup() {
         players = Player.deSerializePlayers();
+        currentPlayer = players.get("Ja");
         ch.fillCards();
         ch.shuffleCards(random);
 
@@ -30,7 +36,7 @@ public class Game {
         ch.removeCard(0);
         CardLabel uresKaryta = new CardLabel();
         CardLabel card2 = new CardLabel(ch.getCards().getFirst());
-        player.addCard(ch.getCards().getFirst());
+        playersCards.addCard(ch.getCards().getFirst());
         ch.removeCard(0);
 
         frame.addLabelIntoNumberedPanel("top1",card1);
@@ -41,7 +47,7 @@ public class Game {
     }
 
     public void reset () {
-        player = new CardHolder();
+        playersCards = new CardHolder();
         dealer = new CardHolder();
         ch = new CardHolder();
         frame.reset();
@@ -53,7 +59,7 @@ public class Game {
     public void updatePlayerValue() {
         playerAceCount = 0;
         playerValue = 0;
-        for (Card card : player.getCards()) {
+        for (Card card : playersCards.getCards()) {
             if (card.getValue() == 1) {
                 playerAceCount++;
             }
@@ -111,7 +117,7 @@ public class Game {
 
     public void playerHit() {
         CardLabel card = new CardLabel(ch.getCards().getFirst());
-        player.addCard(ch.getCards().getFirst());
+        playersCards.addCard(ch.getCards().getFirst());
         ch.removeCard(0);
         frame.addLabelIntoNumberedPanel("bottom",card);
         updatePlayerValue();
@@ -161,14 +167,19 @@ public class Game {
 
     public void win() {
         frame.showCard("winCard");
+        currentPlayer.setWins(currentPlayer.getWins() + 1);
+        currentPlayer.setChips((toIntExact(round(currentPlayer.getChips() + betAmount * 1.5))));
     }
 
     public void draw() {
         frame.showCard("drawCard");
+        currentPlayer.setDraws(currentPlayer.getDraws() + 1);
     }
 
     public void lose() {
         frame.showCard("loseCard");
+        currentPlayer.setLosses(currentPlayer.getLosses() + 1);
+        currentPlayer.setChips(currentPlayer.getChips() - betAmount);
     }
 
     public void savePlayerData() {
