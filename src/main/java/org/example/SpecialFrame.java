@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class SpecialFrame extends JFrame{
     //Used to avoid replicated code used only to make replicas of buttons
-    protected class ResetButton extends JButton{
+    protected static class ResetButton extends JButton{
         public ResetButton(){
             super("Reset");
             setFocusable(false);
@@ -16,11 +16,22 @@ public class SpecialFrame extends JFrame{
             addActionListener(e -> game.reset());
         }
     }
+
+    protected static class statLabel extends JLabel{
+        public statLabel(){
+            super("Value: no data");
+            setFocusable(false);
+            setAlignmentX(Component.CENTER_ALIGNMENT);
+            setFont(new Font("Arial", Font.BOLD, 20));
+            setForeground(Color.white);
+        }
+    }
+
     private CardLayout cl = new CardLayout();
     private HashMap<String, JPanel> panels = new HashMap<>();
     private HashMap<String, JButton> buttons = new HashMap<>();
     private HashMap<String, JLabel> labels = new HashMap<>();
-    public Game game;
+    public static Game game;
 
     public SpecialFrame() {
         panels.put("mainPanel", new JPanel(cl));
@@ -71,6 +82,12 @@ public class SpecialFrame extends JFrame{
         labels.get("loseLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
         labels.get("loseLabel").setFont(new Font("Arial", Font.BOLD, 72));
 
+        labels.put("userNameLabel", new statLabel());
+        labels.put("chipsLabel", new statLabel());
+        labels.put("winStatLabel", new statLabel());
+        labels.put("drawStatLabel", new statLabel());
+        labels.put("loseStatLabel", new statLabel());
+
         //Panels
         JPanel top1 = new JPanel();
         top1.setBackground(Color.red);
@@ -83,6 +100,11 @@ public class SpecialFrame extends JFrame{
         top2.add(buttons.get("hitButton"));
         top2.add(buttons.get("standButton"));
         top2.add(buttons.get("reset1Button"));
+        top2.add(labels.get("userNameLabel"));
+        top2.add(labels.get("chipsLabel"));
+        top2.add(labels.get("winStatLabel"));
+        top2.add(labels.get("drawStatLabel"));
+        top2.add(labels.get("loseStatLabel"));
         panels.put("top2", top2);
 
         panels.put("bottom", new JPanel());
@@ -151,8 +173,8 @@ public class SpecialFrame extends JFrame{
         add(panels.get("mainPanel"));
     }
 
-    public void setupGameConnection(Game game) {
-        this.game = game;
+    public static void setupGameConnection(Game game) {
+        SpecialFrame.game = game;
     }
 
     public void addLabelIntoNumberedPanel(String panelName, JLabel label){
@@ -174,6 +196,25 @@ public class SpecialFrame extends JFrame{
     //Removes the dealers unrevealed cards visual representation
     public void removeHiddenCard() {
         panels.get("top1").remove(1);
+    }
+
+    public void updateNameLabel(String name) {
+        String newString = "Username: " + name;
+        labels.get("userNameLabel").setText(newString);
+    }
+
+    public void updateChips(int chips) {
+        String newString = "Chips: " + chips;
+        labels.get("chipsLabel").setText(newString);
+    }
+
+    public void updateStats(int wins, int draws, int loses) {
+        String newString = "Wins: " + wins + "\n";
+        labels.get("winStatLabel").setText(newString);
+        newString = "Draws: " + draws + "\n";
+        labels.get("drawStatLabel").setText(newString);
+        newString = "Loses: " + loses + "\n";
+        labels.get("loseStatLabel").setText(newString);
     }
 
 }

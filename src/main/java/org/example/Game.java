@@ -28,6 +28,10 @@ public class Game {
     public void setup() {
         players = Player.deSerializePlayers();
         currentPlayer = players.get("Ja");
+        nextRound(); // to avoid duplicated I call it in the setup
+    }
+
+    public void nextRound() {
         ch.fillCards();
         ch.shuffleCards(random);
 
@@ -44,6 +48,9 @@ public class Game {
 
         frame.addLabelIntoNumberedPanel("bottom",card2);
         updateAll();
+        frame.updateNameLabel(currentPlayer.getName());
+        frame.updateChips(currentPlayer.getChips());
+        frame.updateStats(currentPlayer.getWins(), currentPlayer.getDraws(), currentPlayer.getLosses());
     }
 
     public void reset () {
@@ -52,7 +59,7 @@ public class Game {
         ch = new CardHolder();
         frame.reset();
 
-        setup();
+        nextRound();
         SwingUtilities.updateComponentTreeUI(frame);
     }
 
@@ -135,7 +142,7 @@ public class Game {
 
     public void dealerAi() {
         frame.removeHiddenCard();
-        while (calculateSoftValue(dealerValue, dealerAceCount) < 17) {
+        while (calculateSoftValue(dealerValue, dealerAceCount) < 17 && dealerValue < playerValue) {
             dealerHit();
             try {
                 Thread.sleep(500);
@@ -153,6 +160,7 @@ public class Game {
         } else if (finalValue(dealerValue, dealerAceCount) > 21) {
             System.out.println("dealer bust");
             win();
+
         } else if (finalValue(dealerValue, dealerAceCount) < finalValue(playerValue, playerAceCount)) {
             System.out.println("regular win");
             win();
@@ -163,6 +171,7 @@ public class Game {
             System.out.println("draw");
             draw();
         }
+        SwingUtilities.updateComponentTreeUI(frame);
     }
 
     public void win() {

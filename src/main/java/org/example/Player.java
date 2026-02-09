@@ -11,11 +11,18 @@ import com.google.gson.reflect.TypeToken;
 
 public class Player implements Serializable {
     private String name;
-    private int chips = 100, wins = 0, draws = 0, losses = 0;
+    private int chips;
+    private int wins;
+    private int draws;
+    private int losses;
     private static final String playerDataFile = "resources/players.json";
 
     Player(String name) {
         this.name = name;
+        chips = 100;
+        wins = 0;
+        draws = 0;
+        losses = 0;
     }
     Player(String name, int chips, int wins, int draws, int losses) {
         this.name = name;
