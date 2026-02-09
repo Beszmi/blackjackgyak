@@ -142,15 +142,20 @@ public class Game {
 
     public void dealerAi() {
         frame.removeHiddenCard();
-        while (calculateSoftValue(dealerValue, dealerAceCount) < 17 && dealerValue < playerValue) {
-            dealerHit();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                System.out.println("Thread.sleep error");
+        SwingUtilities.updateComponentTreeUI(frame);
+        Timer timer = new Timer(500, null); //Swing timer not main thread sleep for the UI
+
+        timer.addActionListener(e -> {
+            if (calculateSoftValue(dealerValue, dealerAceCount) < 17 && dealerValue < playerValue) {
+                dealerHit();
+            } else { // after theres nomore dealer hits do:
+                timer.stop();
+                resultLogic();
             }
-        }
-        resultLogic();
+        });
+
+        timer.setRepeats(true);
+        timer.start();
     }
 
     public void resultLogic() {
