@@ -1,7 +1,6 @@
 package org.example;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -10,7 +9,7 @@ import static java.lang.Math.toIntExact;
 
 public class Game {
     Random random = new Random();
-    private SpecialFrame frame;
+    private final SpecialFrame frame;
     private CardHolder ch = new CardHolder();
     private HashMap<String, Player> players = new HashMap<>();
     private Player currentPlayer;

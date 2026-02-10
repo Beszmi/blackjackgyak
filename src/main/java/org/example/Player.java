@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 public class Player implements Serializable {
-    private String name;
+    private final String name;
     private int chips;
     private int wins;
     private int draws;

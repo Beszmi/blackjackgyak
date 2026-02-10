@@ -27,10 +27,10 @@ public class SpecialFrame extends JFrame{
         }
     }
 
-    private CardLayout cl = new CardLayout();
-    private HashMap<String, JPanel> panels = new HashMap<>();
-    private HashMap<String, JButton> buttons = new HashMap<>();
-    private HashMap<String, JLabel> labels = new HashMap<>();
+    private final CardLayout cl = new CardLayout();
+    private final HashMap<String, JPanel> panels = new HashMap<>();
+    private final HashMap<String, JButton> buttons = new HashMap<>();
+    private final HashMap<String, JLabel> labels = new HashMap<>();
     public static Game game;
 
     public SpecialFrame() {
@@ -47,8 +47,17 @@ public class SpecialFrame extends JFrame{
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                game.savePlayerData();
-                System.exit(0);
+                switch (JOptionPane.showConfirmDialog(SpecialFrame.this, "Do you want to save your stats?", "Exiting", JOptionPane.YES_NO_CANCEL_OPTION)) {
+                    case JOptionPane.YES_OPTION:
+                        game.savePlayerData();
+                        System.exit(0);
+                        break;
+                    case JOptionPane.NO_OPTION:
+                        System.exit(0);
+                        break;
+                    default:
+                        break;
+                }
             }
         });
 
@@ -140,6 +149,10 @@ public class SpecialFrame extends JFrame{
 
         //Cards
         panels.put("mainPanel", new JPanel(cl));
+
+        panels.put("playerCard", new JPanel());
+        panels.get("playerCard").setBackground(Color.black);
+        panels.get("playerCard").setBounds(0,0,1280,720);
 
         panels.put("gameCard", new JPanel());
         panels.get("gameCard").setBackground(Color.black);
