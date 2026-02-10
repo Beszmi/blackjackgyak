@@ -1,8 +1,8 @@
 package org.example;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.Random;
+import javax.swing.Timer;
+import java.util.*;
 
 import static java.lang.Math.round;
 import static java.lang.Math.toIntExact;
@@ -23,11 +23,9 @@ public class Game {
 
     public Game(SpecialFrame sajatFrame) {
         frame = sajatFrame;
-    }
-    public void setup() {
         players = Player.deSerializePlayers();
-        currentPlayer = players.get("Ja");
-        nextRound(); // to avoid duplicated I call it in the setup
+        currentPlayer = players.get("default");
+        nextRound(); // to avoid duplicated code
     }
 
     public void nextRound() {
@@ -197,5 +195,20 @@ public class Game {
 
     public void savePlayerData() {
         Player.serializePlayers(players);
+    }
+
+    public String[] getPlayNames() {
+        String[] arr = new String[players.size()]; //creates a properly sized static array
+        return players.keySet().toArray(arr); //returns players keys which are their names
+    }
+
+    public void setCurrentPlayer(String playerName) {
+        if (!players.containsKey(playerName)) {
+            System.out.println("Error in setCurrentPlayer, Username: " + playerName + " not found");
+        } else {
+            currentPlayer = players.get(playerName);
+            frame.updateNameLabel(currentPlayer.getName());
+            SwingUtilities.updateComponentTreeUI(frame);
+        }
     }
 }

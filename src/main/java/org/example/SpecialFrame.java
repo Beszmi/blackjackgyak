@@ -1,9 +1,13 @@
 package org.example;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class SpecialFrame extends JFrame{
@@ -38,7 +42,7 @@ public class SpecialFrame extends JFrame{
         this.setSize(1280, 720);
         this.setTitle("BlackJack");
 
-        ImageIcon icon = new ImageIcon("src/main/resources/fetchimage.png");
+        ImageIcon icon = new ImageIcon("resources/icon.png");
         this.setIconImage(icon.getImage());
 
         this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
@@ -61,21 +65,17 @@ public class SpecialFrame extends JFrame{
             }
         });
 
-        //Buttons
-        buttons.put("hitButton", new JButton("Hit"));
-        buttons.get("hitButton").setFocusable(false);
-        buttons.get("hitButton").addActionListener(e -> game.playerHit());
-
-        buttons.put("standButton", new JButton("Stand"));
-        buttons.get("standButton").setFocusable(false);
-        buttons.get("standButton").addActionListener(e -> game.dealerAi());
-
-        buttons.put("reset1Button", new ResetButton());
-        buttons.put("reset2Button", new ResetButton());
-        buttons.put("reset3Button", new ResetButton());
-        buttons.put("reset4Button", new ResetButton());
-
         //Labels
+        labels.put("titleLabel", new JLabel("JAVA SWING BLACKJACK"));
+        labels.get("titleLabel").setFocusable(false);
+        labels.get("titleLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
+        labels.get("titleLabel").setFont(new Font("Arial", Font.BOLD, 72));
+
+        labels.put("selectLabel", new JLabel("Select your user: "));
+        labels.get("selectLabel").setFocusable(false);
+        labels.get("selectLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
+        labels.get("selectLabel").setFont(new Font("Arial", Font.BOLD, 56));
+
         labels.put("winLabel", new JLabel("VICTORY!"));
         labels.get("winLabel").setFocusable(false);
         labels.get("winLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -91,30 +91,65 @@ public class SpecialFrame extends JFrame{
         labels.get("loseLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
         labels.get("loseLabel").setFont(new Font("Arial", Font.BOLD, 72));
 
+        //Background image's label
+        labels.put("backgroundLabel", new JLabel());
+        labels.get("backgroundLabel").setIcon(new ImageIcon("resources/bg.jpg"));
+
+        // Stat Labels
         labels.put("userNameLabel", new statLabel());
         labels.put("chipsLabel", new statLabel());
         labels.put("winStatLabel", new statLabel());
         labels.put("drawStatLabel", new statLabel());
         labels.put("loseStatLabel", new statLabel());
 
-        //Panels
-        JPanel top1 = new JPanel();
-        top1.setBackground(Color.red);
-        top1.setPreferredSize(new Dimension(1000, 360));
-        panels.put("top1", top1);
+        //Buttons
+        buttons.put("playButton", new JButton("PLAY"));
+        buttons.get("playButton").setFocusable(false);
+        buttons.get("playButton").addActionListener(e -> cl.show(panels.get("mainPanel"), "gameCard"));
 
-        JPanel top2 = new JPanel();
-        top2.setBackground(Color.blue);
-        top2.setPreferredSize(new Dimension(200, 300));
-        top2.add(buttons.get("hitButton"));
-        top2.add(buttons.get("standButton"));
-        top2.add(buttons.get("reset1Button"));
-        top2.add(labels.get("userNameLabel"));
-        top2.add(labels.get("chipsLabel"));
-        top2.add(labels.get("winStatLabel"));
-        top2.add(labels.get("drawStatLabel"));
-        top2.add(labels.get("loseStatLabel"));
-        panels.put("top2", top2);
+        buttons.put("hitButton", new JButton("Hit"));
+        buttons.get("hitButton").setFocusable(false);
+        buttons.get("hitButton").addActionListener(e -> game.playerHit());
+
+        buttons.put("standButton", new JButton("Stand"));
+        buttons.get("standButton").setFocusable(false);
+        buttons.get("standButton").addActionListener(e -> game.dealerAi());
+
+        buttons.put("userSelectButton", new JButton("Player selection"));
+        buttons.get("userSelectButton").setFocusable(false);
+        buttons.get("userSelectButton").addActionListener(e -> cl.show(panels.get("mainPanel"), "playerCard"));
+
+        buttons.put("reset1Button", new ResetButton());
+        buttons.put("reset2Button", new ResetButton());
+        buttons.put("reset3Button", new ResetButton());
+        buttons.put("reset4Button", new ResetButton());
+
+        //Panels
+        panels.put("titlePanel", new JPanel());
+        panels.get("titlePanel").add(labels.get("titleLabel"));
+
+        panels.put("selectionPanel", new JPanel());
+        panels.get("selectionPanel").add(labels.get("selectLabel"));
+
+        panels.put("playPanel", new JPanel());
+        panels.get("playPanel").add(buttons.get("playButton"));
+
+        panels.put("top1", new JPanel());
+        panels.get("top1").setBackground(Color.red);
+        panels.get("top1").setPreferredSize(new Dimension(1000, 360));
+
+        panels.put("top2", new JPanel());
+        panels.get("top2").setBackground(Color.blue);
+        panels.get("top2").setPreferredSize(new Dimension(200, 300));
+        panels.get("top2").add(buttons.get("hitButton"));
+        panels.get("top2").add(buttons.get("standButton"));
+        panels.get("top2").add(buttons.get("reset1Button"));
+        panels.get("top2").add(buttons.get("userSelectButton"));
+        panels.get("top2").add(labels.get("userNameLabel"));
+        panels.get("top2").add(labels.get("chipsLabel"));
+        panels.get("top2").add(labels.get("winStatLabel"));
+        panels.get("top2").add(labels.get("drawStatLabel"));
+        panels.get("top2").add(labels.get("loseStatLabel"));
 
         panels.put("bottom", new JPanel());
         panels.get("bottom").setBackground(Color.green);
@@ -149,9 +184,21 @@ public class SpecialFrame extends JFrame{
 
         //Cards
         panels.put("mainPanel", new JPanel(cl));
+        panels.get("mainPanel").add(labels.get("backgroundLabel"));
 
         panels.put("playerCard", new JPanel());
-        panels.get("playerCard").setBackground(Color.black);
+        panels.get("playerCard").setOpaque(false);
+        panels.get("playerCard").setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        panels.get("playerCard").add(panels.get("titlePanel"), c);
+        c.weightx = 0.1; //for testing
+        c.weighty = 0.1;
+        c.gridy = 1;
+        panels.get("playerCard").add(panels.get("selectionPanel"), c);
+        c.gridy = 2;
+        panels.get("playerCard").add(panels.get("playPanel"), c);
         panels.get("playerCard").setBounds(0,0,1280,720);
 
         panels.put("gameCard", new JPanel());
@@ -176,18 +223,28 @@ public class SpecialFrame extends JFrame{
         panels.get("loseCard").add(panels.get("losePanel"));
         panels.get("loseCard").setBounds(0,0,1280,720);
 
+        panels.get("mainPanel").add("playerCard", panels.get("playerCard"));
         panels.get("mainPanel").add("gameCard", panels.get("gameCard"));
         panels.get("mainPanel").add("winCard", panels.get("winCard"));
         panels.get("mainPanel").add("drawCard", panels.get("drawCard"));
         panels.get("mainPanel").add("loseCard", panels.get("loseCard"));
 
-        cl.show(panels.get("mainPanel"), "gameCard");
+        cl.show(panels.get("mainPanel"), "playerCard");
 
         add(panels.get("mainPanel"));
     }
 
-    public static void setupGameConnection(Game game) {
+    public void setupGameConnection(Game game) {
         SpecialFrame.game = game;
+
+        //game connection needed for players selection
+        JComboBox combo = new JComboBox(game.getPlayNames());
+        combo.setFocusable(false);
+        combo.setFont(new Font("Arial", Font.PLAIN, 14));
+        combo.addActionListener(e -> {
+            game.setCurrentPlayer(combo.getSelectedItem().toString());
+        });
+        panels.get("selectionPanel").add(combo);
     }
 
     public void addLabelIntoNumberedPanel(String panelName, JLabel label){

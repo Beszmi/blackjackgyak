@@ -4,9 +4,8 @@ public class Main {
     static void main() {
         SpecialFrame specialFrame = new SpecialFrame();
         Game game = new Game(specialFrame);
-        SpecialFrame.setupGameConnection(game);
 
-        game.setup();
+        specialFrame.setupGameConnection(game);
         specialFrame.setVisible(true);
     }
 }

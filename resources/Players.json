@@ -1,9 +1,30 @@
 {
-  "Ja": {
-    "name": "Ja",
+  "default": {
+    "name": "Default User",
     "chips": 100,
     "wins": 0,
     "draws": 0,
     "losses": 0
+  },
+  "User1": {
+    "name": "User1",
+    "chips": 10,
+    "wins": 0,
+    "draws": 7,
+    "losses": 0
+  },
+  "User2": {
+    "name": "User2",
+    "chips": 1000,
+    "wins": 0,
+    "draws": 3,
+    "losses": 0
+  },
+  "User3": {
+    "name": "User3",
+    "chips": 10000,
+    "wins": 1,
+    "draws": 0,
+    "losses": 2
   }
 }

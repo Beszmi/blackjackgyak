@@ -30,6 +30,13 @@ public class Card {
     }
     @Override
     public String toString() {
-        return value + " " + suit;
+        String str = switch (value) {
+            case 1 -> "Ace";
+            case 11 -> "Jack";
+            case 12 -> "Queen";
+            case 13 -> "King";
+            default -> String.valueOf(value);
+        };
+        return str + " of " + suit;
     }
 }
