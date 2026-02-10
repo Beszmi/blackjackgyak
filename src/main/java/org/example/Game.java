@@ -197,7 +197,7 @@ public class Game {
         Player.serializePlayers(players);
     }
 
-    public String[] getPlayNames() {
+    public String[] getPlayerNames() {
         String[] arr = new String[players.size()]; //creates a properly sized static array
         return players.keySet().toArray(arr); //returns players keys which are their names
     }
@@ -209,6 +209,15 @@ public class Game {
             currentPlayer = players.get(playerName);
             frame.updateNameLabel(currentPlayer.getName());
             SwingUtilities.updateComponentTreeUI(frame);
+        }
+    }
+
+    public void addPlayer(String playerName) {
+        if (!players.containsKey(playerName)) {
+            players.put(playerName, new Player(playerName));
+            frame.showCard("playerCard");
+        } else {
+            JOptionPane.showMessageDialog(frame, "Player " + playerName + " already exists", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -71,7 +71,9 @@ public class Player implements Serializable {
     public static HashMap<String, Player> deSerializePlayers() {
         File file = new File(playerDataFile);
         if (!file.exists()) {
-            return new HashMap<>();
+            HashMap<String, Player> players = new HashMap<>();
+            players.put("default", new Player("default",100,0,0,0));
+            return players;
         }
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(file)){

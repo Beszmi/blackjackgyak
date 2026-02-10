@@ -128,6 +128,12 @@ public class SpecialFrame extends JFrame{
         buttons.put("playButton", new JButton("PLAY"));
         buttons.get("playButton").setFocusable(false);
         buttons.get("playButton").addActionListener(e -> cl.show(panels.get("mainPanel"), "gameCard"));
+        buttons.get("playButton").setFont(new Font("Arial", Font.BOLD, 72));
+
+        buttons.put("registerButton", new JButton("REGISTER NEW USER"));
+        buttons.get("registerButton").setFocusable(false);
+        buttons.get("registerButton").addActionListener(e -> cl.show(panels.get("mainPanel"), "registerCard"));
+        buttons.get("registerButton").setFont(new Font("Arial", Font.BOLD, 48));
 
         buttons.put("hitButton", new JButton("Hit"));
         buttons.get("hitButton").setFocusable(false);
@@ -157,6 +163,7 @@ public class SpecialFrame extends JFrame{
 
         panels.put("playPanel", new JPanel());
         panels.get("playPanel").add(buttons.get("playButton"));
+        panels.get("playPanel").add(buttons.get("registerButton"));
         panels.get("playPanel").setOpaque(false);
 
         panels.put("top1", new JPanel());
@@ -218,6 +225,10 @@ public class SpecialFrame extends JFrame{
         panels.get("playerCard").add(panels.get("playPanel"), c);
         panels.get("playerCard").setBounds(0,0,1280,720);
 
+        panels.put("registerCard", new JPanel());
+        panels.get("registerCard").setOpaque(false);
+        panels.get("registerCard").setBounds(0,0,1280,720);
+
         panels.put("gameCard", new JPanel());
         panels.get("gameCard").setOpaque(false);
         panels.get("gameCard").add(panels.get("top1"));
@@ -241,6 +252,7 @@ public class SpecialFrame extends JFrame{
         panels.get("loseCard").setBounds(0,0,1280,720);
 
         panels.get("mainPanel").add("playerCard", panels.get("playerCard"));
+        panels.get("mainPanel").add("registerCard", panels.get("registerCard"));
         panels.get("mainPanel").add("gameCard", panels.get("gameCard"));
         panels.get("mainPanel").add("winCard", panels.get("winCard"));
         panels.get("mainPanel").add("drawCard", panels.get("drawCard"));
@@ -255,13 +267,28 @@ public class SpecialFrame extends JFrame{
         SpecialFrame.game = game;
 
         //game connection needed for players selection
-        JComboBox combo = new JComboBox(game.getPlayNames());
+        JComboBox combo = new JComboBox(game.getPlayerNames());
         combo.setFocusable(false);
         combo.setFont(new Font("Arial", Font.PLAIN, 28));
         combo.addActionListener(e -> {
             game.setCurrentPlayer(combo.getSelectedItem().toString());
         });
         panels.get("selectionPanel").add(combo);
+
+        JTextField field = new JTextField();
+        field.setFont(new Font("Times New Roman", Font.PLAIN, 28));
+        field.setPreferredSize(new Dimension(250, 30));
+        panels.get("registerCard").add(field);
+
+        JButton registerConfirmButton = new JButton("register");
+        registerConfirmButton.addActionListener(e -> {
+            game.addPlayer(field.getText());
+            combo.addItem(field.getText());
+            SwingUtilities.updateComponentTreeUI(this);
+            cl.show(panels.get("mainPanel"), "playerCard");
+        });
+        registerConfirmButton.setFont(new Font("Arial", Font.BOLD, 36));
+        panels.get("registerCard").add(registerConfirmButton);
     }
 
     public void addLabelIntoNumberedPanel(String panelName, JLabel label){
