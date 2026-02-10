@@ -38,7 +38,24 @@ public class SpecialFrame extends JFrame{
     public static Game game;
 
     public SpecialFrame() {
-        panels.put("mainPanel", new JPanel(cl));
+        Image bgImage = null;
+        try {
+            bgImage = ImageIO.read(new File("resources/bg.jpg"));
+        } catch (IOException e) {e.printStackTrace();}
+        final Image finalImg = bgImage;
+
+        //This forces the background image to load underneath the cards
+        JPanel mainPanel = new JPanel(cl) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (finalImg != null) {
+                    g.drawImage(finalImg, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+        panels.put("mainPanel", mainPanel);
+
         this.setSize(1280, 720);
         this.setTitle("BlackJack");
 
@@ -70,26 +87,31 @@ public class SpecialFrame extends JFrame{
         labels.get("titleLabel").setFocusable(false);
         labels.get("titleLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
         labels.get("titleLabel").setFont(new Font("Arial", Font.BOLD, 72));
+        labels.get("titleLabel").setForeground(Color.red);
 
         labels.put("selectLabel", new JLabel("Select your user: "));
         labels.get("selectLabel").setFocusable(false);
         labels.get("selectLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
         labels.get("selectLabel").setFont(new Font("Arial", Font.BOLD, 56));
+        labels.get("selectLabel").setForeground(Color.white);
 
         labels.put("winLabel", new JLabel("VICTORY!"));
         labels.get("winLabel").setFocusable(false);
         labels.get("winLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
         labels.get("winLabel").setFont(new Font("Arial", Font.BOLD, 72));
+        labels.get("winLabel").setForeground(Color.green);
 
         labels.put("drawLabel", new JLabel("DRAW!"));
         labels.get("drawLabel").setFocusable(false);
         labels.get("drawLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
         labels.get("drawLabel").setFont(new Font("Arial", Font.BOLD, 72));
+        labels.get("drawLabel").setForeground(Color.blue);
 
         labels.put("loseLabel", new JLabel("LOSE!"));
         labels.get("loseLabel").setFocusable(false);
         labels.get("loseLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
         labels.get("loseLabel").setFont(new Font("Arial", Font.BOLD, 72));
+        labels.get("loseLabel").setForeground(Color.red);
 
         //Background image's label
         labels.put("backgroundLabel", new JLabel());
@@ -127,12 +149,15 @@ public class SpecialFrame extends JFrame{
         //Panels
         panels.put("titlePanel", new JPanel());
         panels.get("titlePanel").add(labels.get("titleLabel"));
+        panels.get("titlePanel").setOpaque(false);
 
         panels.put("selectionPanel", new JPanel());
         panels.get("selectionPanel").add(labels.get("selectLabel"));
+        panels.get("selectionPanel").setOpaque(false);
 
         panels.put("playPanel", new JPanel());
         panels.get("playPanel").add(buttons.get("playButton"));
+        panels.get("playPanel").setOpaque(false);
 
         panels.put("top1", new JPanel());
         panels.get("top1").setBackground(Color.red);
@@ -144,12 +169,12 @@ public class SpecialFrame extends JFrame{
         panels.get("top2").add(buttons.get("hitButton"));
         panels.get("top2").add(buttons.get("standButton"));
         panels.get("top2").add(buttons.get("reset1Button"));
-        panels.get("top2").add(buttons.get("userSelectButton"));
         panels.get("top2").add(labels.get("userNameLabel"));
         panels.get("top2").add(labels.get("chipsLabel"));
         panels.get("top2").add(labels.get("winStatLabel"));
         panels.get("top2").add(labels.get("drawStatLabel"));
         panels.get("top2").add(labels.get("loseStatLabel"));
+        panels.get("top2").add(buttons.get("userSelectButton"));
 
         panels.put("bottom", new JPanel());
         panels.get("bottom").setBackground(Color.green);
@@ -157,8 +182,7 @@ public class SpecialFrame extends JFrame{
 
         panels.put("winPanel", new JPanel());
         panels.get("winPanel").setLayout(new BoxLayout(panels.get("winPanel"), BoxLayout.Y_AXIS));
-        panels.get("winPanel").setBackground(Color.green);
-        panels.get("winPanel").setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panels.get("winPanel").setOpaque(false);
         panels.get("winPanel").setPreferredSize(new Dimension(1280, 720));
         panels.get("winPanel").add(labels.get("winLabel"));
         panels.get("winPanel").add(Box.createRigidArea(new Dimension(0, 10)));
@@ -166,8 +190,7 @@ public class SpecialFrame extends JFrame{
 
         panels.put("drawPanel", new JPanel());
         panels.get("drawPanel").setLayout(new BoxLayout(panels.get("drawPanel"), BoxLayout.Y_AXIS));
-        panels.get("drawPanel").setBackground(Color.blue);
-        panels.get("drawPanel").setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panels.get("drawPanel").setOpaque(false);
         panels.get("drawPanel").setPreferredSize(new Dimension(1280, 720));
         panels.get("drawPanel").add(labels.get("drawLabel"));
         panels.get("drawPanel").add(Box.createRigidArea(new Dimension(0, 10)));
@@ -175,17 +198,13 @@ public class SpecialFrame extends JFrame{
 
         panels.put("losePanel", new JPanel());
         panels.get("losePanel").setLayout(new BoxLayout(panels.get("losePanel"), BoxLayout.Y_AXIS));
-        panels.get("losePanel").setBackground(Color.red);
-        panels.get("losePanel").setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panels.get("losePanel").setOpaque(false);
         panels.get("losePanel").setPreferredSize(new Dimension(1280, 720));
         panels.get("losePanel").add(labels.get("loseLabel"));
         panels.get("losePanel").add(Box.createRigidArea(new Dimension(0, 10)));
         panels.get("losePanel").add(buttons.get("reset4Button"));
 
         //Cards
-        panels.put("mainPanel", new JPanel(cl));
-        panels.get("mainPanel").add(labels.get("backgroundLabel"));
-
         panels.put("playerCard", new JPanel());
         panels.get("playerCard").setOpaque(false);
         panels.get("playerCard").setLayout(new GridBagLayout());
@@ -193,8 +212,6 @@ public class SpecialFrame extends JFrame{
         c.gridx = 0;
         c.gridy = 0;
         panels.get("playerCard").add(panels.get("titlePanel"), c);
-        c.weightx = 0.1; //for testing
-        c.weighty = 0.1;
         c.gridy = 1;
         panels.get("playerCard").add(panels.get("selectionPanel"), c);
         c.gridy = 2;
@@ -202,24 +219,24 @@ public class SpecialFrame extends JFrame{
         panels.get("playerCard").setBounds(0,0,1280,720);
 
         panels.put("gameCard", new JPanel());
-        panels.get("gameCard").setBackground(Color.black);
+        panels.get("gameCard").setOpaque(false);
         panels.get("gameCard").add(panels.get("top1"));
         panels.get("gameCard").add(panels.get("top2"));
         panels.get("gameCard").add(panels.get("bottom"));
         panels.get("gameCard").setBounds(0,0,1280,720);
 
         panels.put("winCard", new JPanel(new GridBagLayout()));
-        panels.get("winCard").setBackground(Color.LIGHT_GRAY);
+        panels.get("winCard").setOpaque(false);
         panels.get("winCard").add(panels.get("winPanel"));
         panels.get("winCard").setBounds(0,0,1280,720);
 
         panels.put("drawCard", new JPanel(new GridBagLayout()));
-        panels.get("drawCard").setBackground(Color.LIGHT_GRAY);
+        panels.get("drawCard").setOpaque(false);
         panels.get("drawCard").add(panels.get("drawPanel"));
         panels.get("drawCard").setBounds(0,0,1280,720);
 
         panels.put("loseCard", new JPanel(new GridBagLayout()));
-        panels.get("loseCard").setBackground(Color.LIGHT_GRAY);
+        panels.get("loseCard").setOpaque(false);
         panels.get("loseCard").add(panels.get("losePanel"));
         panels.get("loseCard").setBounds(0,0,1280,720);
 
@@ -240,7 +257,7 @@ public class SpecialFrame extends JFrame{
         //game connection needed for players selection
         JComboBox combo = new JComboBox(game.getPlayNames());
         combo.setFocusable(false);
-        combo.setFont(new Font("Arial", Font.PLAIN, 14));
+        combo.setFont(new Font("Arial", Font.PLAIN, 28));
         combo.addActionListener(e -> {
             game.setCurrentPlayer(combo.getSelectedItem().toString());
         });
