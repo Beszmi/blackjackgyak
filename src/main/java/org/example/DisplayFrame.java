@@ -7,10 +7,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 
-public class SpecialFrame extends JFrame{
+public class DisplayFrame extends JFrame{
     //Used to avoid replicated code used only to make replicas of buttons
     protected static class ResetButton extends JButton{
         public ResetButton(){
@@ -37,7 +36,7 @@ public class SpecialFrame extends JFrame{
     private final HashMap<String, JLabel> labels = new HashMap<>();
     public static Game game;
 
-    public SpecialFrame() {
+    public DisplayFrame() {
         Image bgImage = null;
         try {
             bgImage = ImageIO.read(new File("resources/bg.jpg"));
@@ -68,7 +67,7 @@ public class SpecialFrame extends JFrame{
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                switch (JOptionPane.showConfirmDialog(SpecialFrame.this, "Do you want to save your stats?", "Exiting", JOptionPane.YES_NO_CANCEL_OPTION)) {
+                switch (JOptionPane.showConfirmDialog(DisplayFrame.this, "Do you want to save your stats?", "Exiting", JOptionPane.YES_NO_CANCEL_OPTION)) {
                     case JOptionPane.YES_OPTION:
                         game.savePlayerData();
                         System.exit(0);
@@ -93,7 +92,7 @@ public class SpecialFrame extends JFrame{
         labels.get("selectLabel").setFocusable(false);
         labels.get("selectLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
         labels.get("selectLabel").setFont(new Font("Arial", Font.BOLD, 56));
-        labels.get("selectLabel").setForeground(Color.white);
+        labels.get("selectLabel").setForeground(Color.black);
 
         labels.put("winLabel", new JLabel("VICTORY!"));
         labels.get("winLabel").setFocusable(false);
@@ -264,7 +263,7 @@ public class SpecialFrame extends JFrame{
     }
 
     public void setupGameConnection(Game game) {
-        SpecialFrame.game = game;
+        DisplayFrame.game = game;
 
         //game connection needed for players selection
         JComboBox combo = new JComboBox(game.getPlayerNames());

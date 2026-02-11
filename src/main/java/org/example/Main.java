@@ -2,10 +2,10 @@ package org.example;
 
 public class Main {
     static void main() {
-        SpecialFrame specialFrame = new SpecialFrame();
-        Game game = new Game(specialFrame);
+        DisplayFrame displayFrame = new DisplayFrame();
+        Game game = new Game(displayFrame);
 
-        specialFrame.setupGameConnection(game);
-        specialFrame.setVisible(true);
+        displayFrame.setupGameConnection(game);
+        displayFrame.setVisible(true);
     }
 }

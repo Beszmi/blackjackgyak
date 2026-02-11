@@ -9,7 +9,7 @@ import static java.lang.Math.toIntExact;
 
 public class Game {
     Random random = new Random();
-    private final SpecialFrame frame;
+    private final DisplayFrame frame;
     private CardHolder ch = new CardHolder();
     private HashMap<String, Player> players = new HashMap<>();
     private Player currentPlayer;
@@ -21,7 +21,7 @@ public class Game {
     private int dealerAceCount = 0;
     private int betAmount = 10;
 
-    public Game(SpecialFrame sajatFrame) {
+    public Game(DisplayFrame sajatFrame) {
         frame = sajatFrame;
         players = Player.deSerializePlayers();
         currentPlayer = players.get("default");
