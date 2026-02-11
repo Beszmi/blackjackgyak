@@ -126,6 +126,15 @@ public class Game {
         frame.addLabelIntoNumberedPanel("bottom",card);
         updatePlayerValue();
         SwingUtilities.updateComponentTreeUI(frame);
+        if (playerValue > 21) {
+            try {
+                Thread.sleep(750);
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
+            System.out.println("bust");
+            lose();
+        }
     }
 
     public void dealerHit() {
@@ -140,7 +149,7 @@ public class Game {
     public void dealerAi() {
         frame.removeHiddenCard();
         SwingUtilities.updateComponentTreeUI(frame);
-        Timer timer = new Timer(500, null); //Swing timer not main thread sleep for the UI
+        Timer timer = new Timer(750, null); //Swing timer not main thread sleep for the UI
 
         timer.addActionListener(e -> {
             if (calculateSoftValue(dealerValue, dealerAceCount) < 17 && dealerValue < playerValue) {
@@ -156,13 +165,9 @@ public class Game {
     }
 
     public void resultLogic() {
-        if (finalValue(playerValue, playerAceCount) > 21) {
-            System.out.println("bust");
-            lose();
-        } else if (finalValue(dealerValue, dealerAceCount) > 21) {
+        if (finalValue(dealerValue, dealerAceCount) > 21) {
             System.out.println("dealer bust");
             win();
-
         } else if (finalValue(dealerValue, dealerAceCount) < finalValue(playerValue, playerAceCount)) {
             System.out.println("regular win");
             win();
@@ -208,6 +213,8 @@ public class Game {
         } else {
             currentPlayer = players.get(playerName);
             frame.updateNameLabel(currentPlayer.getName());
+            frame.updateChips(currentPlayer.getChips());
+            frame.updateStats(currentPlayer.getWins(), currentPlayer.getDraws(), currentPlayer.getLosses());
             SwingUtilities.updateComponentTreeUI(frame);
         }
     }
