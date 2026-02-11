@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static org.example.config.*;
+
 public class DisplayFrame extends JFrame{
     //Used to avoid replicated code used only to make replicas of buttons
     protected static class ResetButton extends JButton{
@@ -55,7 +57,7 @@ public class DisplayFrame extends JFrame{
         };
         panels.put("mainPanel", mainPanel);
 
-        this.setSize(1280, 720);
+        this.setSize(screenWidth, screenHeight);
         this.setTitle("BlackJack");
 
         ImageIcon icon = new ImageIcon("resources/icon.png");

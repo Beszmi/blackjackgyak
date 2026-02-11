@@ -7,3 +7,6 @@ Main menu:
 - Fully functioning blackjack gameplay
 - Players to keep track of previous games
 - Registering new players
+
+**To be implemented:**
+- Setting betting amount for every round

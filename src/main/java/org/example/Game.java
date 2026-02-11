@@ -6,9 +6,9 @@ import java.util.*;
 
 import static java.lang.Math.round;
 import static java.lang.Math.toIntExact;
+import static org.example.config.*;
 
 public class Game {
-    Random random = new Random();
     private final DisplayFrame frame;
     private CardHolder ch = new CardHolder();
     private HashMap<String, Player> players = new HashMap<>();
@@ -30,7 +30,7 @@ public class Game {
 
     public void nextRound() {
         ch.fillCards();
-        ch.shuffleCards(random);
+        ch.shuffleCards();
 
         CardLabel card1 = new CardLabel(ch.getCards().getFirst());
         dealer.addCard(ch.getCards().getFirst());
@@ -152,7 +152,7 @@ public class Game {
         Timer timer = new Timer(750, null); //Swing timer not main thread sleep for the UI
 
         timer.addActionListener(e -> {
-            if (calculateSoftValue(dealerValue, dealerAceCount) < 17 && dealerValue < playerValue) {
+            if (calculateSoftValue(dealerValue, dealerAceCount) < dealerStandValue && dealerValue < playerValue) {
                 dealerHit();
             } else { // after theres nomore dealer hits do:
                 timer.stop();
@@ -184,7 +184,7 @@ public class Game {
     public void win() {
         frame.showCard("winCard");
         currentPlayer.setWins(currentPlayer.getWins() + 1);
-        currentPlayer.setChips((toIntExact(round(currentPlayer.getChips() + betAmount * 1.5))));
+        currentPlayer.setChips((toIntExact(round(currentPlayer.getChips() + betAmount * payoutAmount))));
     }
 
     public void draw() {
