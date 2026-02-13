@@ -4,17 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CardLabel extends JLabel {
-    private static final ImageIcon kartyaKep = new ImageIcon("resources/kartya.png");
-    private static final ImageIcon emptyKep = new ImageIcon("resources/kartyaEmpty.png");
+    private static final ImageIcon cardImg = new ImageIcon("resources/card.png");
+    private static final ImageIcon emptyImg = new ImageIcon("resources/cardEmpty.png");
     public CardLabel() {
-        ImageIcon emptyKep = new ImageIcon("resources/kartyaEmpty.png");
-        this.setIcon(emptyKep);
+        this.setIcon(emptyImg);
     }
 
     public CardLabel(Card card) {
-        this.setIcon(kartyaKep);
+        this.setIcon(cardImg);
         this.setText(card.toString());
         this.setFont(new Font("Arial", Font.BOLD, 16));
-        this.setHorizontalTextPosition(JLabel.CENTER);
+        this.setHorizontalTextPosition(SwingConstants.CENTER);
     }
 }

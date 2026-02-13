@@ -45,9 +45,9 @@ public class DisplayFrame extends JFrame {
     private final HashMap<String, JLabel> labels = new HashMap<>();
 
     //JObjects that need direct game connection
-    private JComboBox<String> combo;
-    private JTextField registerField;
-    private JButton registerConfirmButton;
+    private final JComboBox<String> combo;
+    private final JTextField registerField;
+    private final JButton registerConfirmButton;
 
     public DisplayFrame() {
         Image bgImage = null;
@@ -74,7 +74,6 @@ public class DisplayFrame extends JFrame {
         ImageIcon icon = new ImageIcon("resources/icon.png");
         this.setIconImage(icon.getImage());
 
-        this.setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
         this.setResizable(false);
 
         addWindowListener(new WindowAdapter() {
@@ -96,7 +95,7 @@ public class DisplayFrame extends JFrame {
             }
         });
 
-        //Game conencted objects
+        //Game connected objects
         combo = new JComboBox<>();
         combo.setFocusable(false);
         combo.setFont(new Font("Arial", Font.PLAIN, 28));
@@ -287,7 +286,7 @@ public class DisplayFrame extends JFrame {
         add(panels.get("mainPanel"));
     }
 
-    public void addplayListener(ActionListener listener) {
+    public void addPlayListener(ActionListener listener) {
         buttons.get("playButton").addActionListener(listener);
     }
 
@@ -332,7 +331,7 @@ public class DisplayFrame extends JFrame {
         return (String) combo.getSelectedItem();
     }
 
-    //Method for the textfield
+    //Method for the textField
     public String getRegisterInput() {
         return registerField.getText();
     }

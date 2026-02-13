@@ -50,7 +50,7 @@ public class Game {
         SwingUtilities.updateComponentTreeUI(frame);
 
         //Button functions
-        frame.addplayListener(e -> frame.showCard("gameCard"));
+        frame.addPlayListener(e -> frame.showCard("gameCard"));
         frame.addHitListener(e -> playerHit());
         frame.addStandListener(e -> dealerAi());
         frame.adduserSelectListener(e -> frame.showCard("playerCard"));
@@ -76,13 +76,13 @@ public class Game {
         CardLabel card1 = new CardLabel(ch.getCards().getFirst());
         dealer.addCard(ch.getCards().getFirst());
         ch.removeCard(0);
-        CardLabel uresKaryta = new CardLabel();
+        CardLabel emptyCard = new CardLabel();
         CardLabel card2 = new CardLabel(ch.getCards().getFirst());
         playersCards.addCard(ch.getCards().getFirst());
         ch.removeCard(0);
 
         frame.addLabelIntoNumberedPanel("top1",card1);
-        frame.addLabelIntoNumberedPanel("top1",uresKaryta);
+        frame.addLabelIntoNumberedPanel("top1",emptyCard);
 
         frame.addLabelIntoNumberedPanel("bottom",card2);
         updateAll();
