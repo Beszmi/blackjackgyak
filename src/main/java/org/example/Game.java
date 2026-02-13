@@ -24,6 +24,47 @@ public class Game {
     public Game(DisplayFrame sajatFrame) {
         frame = sajatFrame;
         players = Player.deSerializePlayers();
+
+        //Game connected GUI objects setup
+        frame.setPlayerList(getPlayerNames());
+
+        frame.addPlayerSelectionListener(e -> {
+            String selectedName = frame.getSelectedPlayer();
+            if (selectedName != null) {
+                setCurrentPlayer(selectedName);
+            }
+        });
+
+        frame.addRegisterConfirmListener(e -> {
+            String newName = frame.getRegisterInput();
+
+            if (newName != null && !newName.trim().isEmpty()) {
+                boolean success = addPlayer(newName);
+                //only proceeds if the username isn't already registered
+                if (success) {
+                    frame.addPlayerToDropdown(newName);
+                    frame.showCard("playerCard");
+                }
+            }
+        });
+        SwingUtilities.updateComponentTreeUI(frame);
+
+        //Button functions
+        frame.addplayListener(e -> frame.showCard("gameCard"));
+        frame.addHitListener(e -> playerHit());
+        frame.addStandListener(e -> dealerAi());
+        frame.adduserSelectListener(e -> frame.showCard("playerCard"));
+        frame.addResetListener(e -> reset());
+        frame.addRegisterListener(e -> frame.showCard("registerCard"));
+
+        //Saving logic
+        frame.setShutdownHandler(shouldSave -> {
+            if (shouldSave) {
+                savePlayerData();
+            }
+            System.exit(0);
+        });
+
         currentPlayer = players.get("default");
         nextRound(); // to avoid duplicated code
     }
@@ -154,7 +195,7 @@ public class Game {
         timer.addActionListener(e -> {
             if (calculateSoftValue(dealerValue, dealerAceCount) < dealerStandValue && dealerValue < playerValue) {
                 dealerHit();
-            } else { // after theres nomore dealer hits do:
+            } else { // after there's no more dealer hits do:
                 timer.stop();
                 resultLogic();
             }
@@ -219,12 +260,13 @@ public class Game {
         }
     }
 
-    public void addPlayer(String playerName) {
+    public boolean addPlayer(String playerName) {
         if (!players.containsKey(playerName)) {
             players.put(playerName, new Player(playerName));
-            frame.showCard("playerCard");
+            return true;
         } else {
             JOptionPane.showMessageDialog(frame, "Player " + playerName + " already exists", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
 }

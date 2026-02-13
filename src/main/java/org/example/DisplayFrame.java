@@ -3,22 +3,23 @@ package org.example;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 import static org.example.config.*;
 
-public class DisplayFrame extends JFrame{
+public class DisplayFrame extends JFrame {
     //Used to avoid replicated code used only to make replicas of buttons
     protected static class ResetButton extends JButton{
         public ResetButton(){
             super("Reset");
             setFocusable(false);
             setAlignmentX(Component.CENTER_ALIGNMENT);
-            addActionListener(e -> game.reset());
         }
     }
 
@@ -32,11 +33,21 @@ public class DisplayFrame extends JFrame{
         }
     }
 
+    private transient Consumer<Boolean> shutdownHandler;
+
+    public void setShutdownHandler(Consumer<Boolean> handler) {
+        this.shutdownHandler = handler;
+    }
+
     private final CardLayout cl = new CardLayout();
     private final HashMap<String, JPanel> panels = new HashMap<>();
     private final HashMap<String, JButton> buttons = new HashMap<>();
     private final HashMap<String, JLabel> labels = new HashMap<>();
-    public static Game game;
+
+    //JObjects that need direct game connection
+    private JComboBox<String> combo;
+    private JTextField registerField;
+    private JButton registerConfirmButton;
 
     public DisplayFrame() {
         Image bgImage = null;
@@ -69,19 +80,33 @@ public class DisplayFrame extends JFrame{
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                switch (JOptionPane.showConfirmDialog(DisplayFrame.this, "Do you want to save your stats?", "Exiting", JOptionPane.YES_NO_CANCEL_OPTION)) {
-                    case JOptionPane.YES_OPTION:
-                        game.savePlayerData();
-                        System.exit(0);
-                        break;
-                    case JOptionPane.NO_OPTION:
-                        System.exit(0);
-                        break;
-                    default:
-                        break;
+                int choice = JOptionPane.showConfirmDialog(
+                        DisplayFrame.this,
+                        "Do you want to save your stats?",
+                        "Exiting",
+                        JOptionPane.YES_NO_CANCEL_OPTION
+                );
+
+                if (choice == JOptionPane.CANCEL_OPTION || choice == JOptionPane.CLOSED_OPTION) {
+                    return;
                 }
+
+                boolean shouldSave = (choice == JOptionPane.YES_OPTION);
+                shutdownHandler.accept(shouldSave);
             }
         });
+
+        //Game conencted objects
+        combo = new JComboBox<>();
+        combo.setFocusable(false);
+        combo.setFont(new Font("Arial", Font.PLAIN, 28));
+
+        registerField = new JTextField();
+        registerField.setFont(new Font("Times New Roman", Font.PLAIN, 28));
+        registerField.setPreferredSize(new Dimension(250, 30));
+
+        registerConfirmButton = new JButton("register");
+        registerConfirmButton.setFont(new Font("Arial", Font.BOLD, 36));
 
         //Labels
         labels.put("titleLabel", new JLabel("JAVA SWING BLACKJACK"));
@@ -128,25 +153,20 @@ public class DisplayFrame extends JFrame{
         //Buttons
         buttons.put("playButton", new JButton("PLAY"));
         buttons.get("playButton").setFocusable(false);
-        buttons.get("playButton").addActionListener(e -> cl.show(panels.get("mainPanel"), "gameCard"));
         buttons.get("playButton").setFont(new Font("Arial", Font.BOLD, 72));
 
         buttons.put("registerButton", new JButton("REGISTER NEW USER"));
         buttons.get("registerButton").setFocusable(false);
-        buttons.get("registerButton").addActionListener(e -> cl.show(panels.get("mainPanel"), "registerCard"));
         buttons.get("registerButton").setFont(new Font("Arial", Font.BOLD, 48));
 
         buttons.put("hitButton", new JButton("Hit"));
         buttons.get("hitButton").setFocusable(false);
-        buttons.get("hitButton").addActionListener(e -> game.playerHit());
 
         buttons.put("standButton", new JButton("Stand"));
         buttons.get("standButton").setFocusable(false);
-        buttons.get("standButton").addActionListener(e -> game.dealerAi());
 
         buttons.put("userSelectButton", new JButton("Player selection"));
         buttons.get("userSelectButton").setFocusable(false);
-        buttons.get("userSelectButton").addActionListener(e -> cl.show(panels.get("mainPanel"), "playerCard"));
 
         buttons.put("reset1Button", new ResetButton());
         buttons.put("reset2Button", new ResetButton());
@@ -161,6 +181,7 @@ public class DisplayFrame extends JFrame{
         panels.put("selectionPanel", new JPanel());
         panels.get("selectionPanel").add(labels.get("selectLabel"));
         panels.get("selectionPanel").setOpaque(false);
+        panels.get("selectionPanel").add(combo);
 
         panels.put("playPanel", new JPanel());
         panels.get("playPanel").add(buttons.get("playButton"));
@@ -229,6 +250,8 @@ public class DisplayFrame extends JFrame{
         panels.put("registerCard", new JPanel());
         panels.get("registerCard").setOpaque(false);
         panels.get("registerCard").setBounds(0,0,1280,720);
+        panels.get("registerCard").add(registerField);
+        panels.get("registerCard").add(registerConfirmButton);
 
         panels.put("gameCard", new JPanel());
         panels.get("gameCard").setOpaque(false);
@@ -264,32 +287,63 @@ public class DisplayFrame extends JFrame{
         add(panels.get("mainPanel"));
     }
 
-    public void setupGameConnection(Game game) {
-        DisplayFrame.game = game;
+    public void addplayListener(ActionListener listener) {
+        buttons.get("playButton").addActionListener(listener);
+    }
 
-        //game connection needed for players selection
-        JComboBox combo = new JComboBox(game.getPlayerNames());
-        combo.setFocusable(false);
-        combo.setFont(new Font("Arial", Font.PLAIN, 28));
-        combo.addActionListener(e -> {
-            game.setCurrentPlayer(combo.getSelectedItem().toString());
-        });
-        panels.get("selectionPanel").add(combo);
+    public void addRegisterListener(ActionListener listener) {
+        buttons.get("registerButton").addActionListener(listener);
+    }
 
-        JTextField field = new JTextField();
-        field.setFont(new Font("Times New Roman", Font.PLAIN, 28));
-        field.setPreferredSize(new Dimension(250, 30));
-        panels.get("registerCard").add(field);
+    public void addHitListener(ActionListener listener) {
+        buttons.get("hitButton").addActionListener(listener);
+    }
 
-        JButton registerConfirmButton = new JButton("register");
-        registerConfirmButton.addActionListener(e -> {
-            game.addPlayer(field.getText());
-            combo.addItem(field.getText());
-            SwingUtilities.updateComponentTreeUI(this);
-            cl.show(panels.get("mainPanel"), "playerCard");
-        });
-        registerConfirmButton.setFont(new Font("Arial", Font.BOLD, 36));
-        panels.get("registerCard").add(registerConfirmButton);
+    public void addStandListener(ActionListener listener) {
+        buttons.get("standButton").addActionListener(listener);
+    }
+
+    public void adduserSelectListener(ActionListener listener) {
+        buttons.get("userSelectButton").addActionListener(listener);
+    }
+
+    public void addResetListener(ActionListener listener) {
+        // Since you have multiple reset buttons, add the listener to all of them
+        buttons.get("reset1Button").addActionListener(listener);
+        buttons.get("reset2Button").addActionListener(listener);
+        buttons.get("reset3Button").addActionListener(listener);
+        buttons.get("reset4Button").addActionListener(listener);
+    }
+
+    public void setPlayerList(String[] names) {
+        combo.removeAllItems();
+        for (String name : names) {
+            combo.addItem(name);
+        }
+    }
+
+    //Methods for the JCombo
+    public void addPlayerToDropdown(String name) {
+        combo.addItem(name);
+        combo.setSelectedItem(name);
+    }
+
+    public String getSelectedPlayer() {
+        return (String) combo.getSelectedItem();
+    }
+
+    //Method for the textfield
+    public String getRegisterInput() {
+        return registerField.getText();
+    }
+
+    // Attach listeners
+    public void addPlayerSelectionListener(ActionListener listener) {
+        combo.addActionListener(listener);
+    }
+
+    public void addRegisterConfirmListener(ActionListener listener) {
+        registerConfirmButton.addActionListener(listener);
     }
 
     public void addLabelIntoNumberedPanel(String panelName, JLabel label){
