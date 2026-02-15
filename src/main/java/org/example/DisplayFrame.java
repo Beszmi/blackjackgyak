@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-import static org.example.config.*;
+import static org.example.Config.*;
 
 public class DisplayFrame extends JFrame {
     //Used to avoid replicated code used only to make replicas of buttons
@@ -48,6 +48,8 @@ public class DisplayFrame extends JFrame {
     private final JComboBox<String> combo;
     private final JTextField registerField;
     private final JButton registerConfirmButton;
+    private final JTextField betField;
+    private final JButton betButton;
 
     public DisplayFrame() {
         Image bgImage = null;
@@ -68,7 +70,7 @@ public class DisplayFrame extends JFrame {
         };
         panels.put("mainPanel", mainPanel);
 
-        this.setSize(screenWidth, screenHeight);
+        this.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         this.setTitle("BlackJack");
 
         ImageIcon icon = new ImageIcon("resources/icon.png");
@@ -107,6 +109,14 @@ public class DisplayFrame extends JFrame {
         registerConfirmButton = new JButton("register");
         registerConfirmButton.setFont(new Font("Arial", Font.BOLD, 36));
 
+        betField = new JTextField();
+        betField.setFont(new Font("Times New Roman", Font.PLAIN, 28));
+        betField.setPreferredSize(new Dimension(250, 35));
+        betField.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.black));
+
+        betButton = new JButton("PLAY");
+        betButton.setFont(new Font("Arial", Font.BOLD, 72));
+
         //Labels
         labels.put("titleLabel", new JLabel("JAVA SWING BLACKJACK"));
         labels.get("titleLabel").setFocusable(false);
@@ -138,6 +148,12 @@ public class DisplayFrame extends JFrame {
         labels.get("loseLabel").setFont(new Font("Arial", Font.BOLD, 72));
         labels.get("loseLabel").setForeground(Color.red);
 
+        labels.put("betLabel", new JLabel("Please enter your bet"));
+        labels.get("betLabel").setFocusable(false);
+        labels.get("betLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
+        labels.get("betLabel").setFont(new Font("Arial", Font.BOLD, 72));
+        labels.get("betLabel").setForeground(Color.white);
+
         //Background image's label
         labels.put("backgroundLabel", new JLabel());
         labels.get("backgroundLabel").setIcon(new ImageIcon("resources/bg.jpg"));
@@ -148,6 +164,7 @@ public class DisplayFrame extends JFrame {
         labels.put("winStatLabel", new statLabel());
         labels.put("drawStatLabel", new statLabel());
         labels.put("loseStatLabel", new statLabel());
+        labels.put("betAmountLabel", new statLabel());
 
         //Buttons
         buttons.put("playButton", new JButton("PLAY"));
@@ -191,18 +208,38 @@ public class DisplayFrame extends JFrame {
         panels.get("top1").setBackground(Color.red);
         panels.get("top1").setPreferredSize(new Dimension(1000, 360));
 
-        panels.put("top2", new JPanel());
+        panels.put("top2", new JPanel(new GridBagLayout()));
         panels.get("top2").setBackground(Color.blue);
-        panels.get("top2").setPreferredSize(new Dimension(200, 300));
-        panels.get("top2").add(buttons.get("hitButton"));
-        panels.get("top2").add(buttons.get("standButton"));
-        panels.get("top2").add(buttons.get("reset1Button"));
-        panels.get("top2").add(labels.get("userNameLabel"));
-        panels.get("top2").add(labels.get("chipsLabel"));
-        panels.get("top2").add(labels.get("winStatLabel"));
-        panels.get("top2").add(labels.get("drawStatLabel"));
-        panels.get("top2").add(labels.get("loseStatLabel"));
-        panels.get("top2").add(buttons.get("userSelectButton"));
+        panels.get("top2").setPreferredSize(new Dimension(220, 300));
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        panels.get("top2").add(buttons.get("hitButton"), c);
+        c.gridx = 1;
+        panels.get("top2").add(buttons.get("standButton"), c);
+        c.gridx = 2;
+        panels.get("top2").add(buttons.get("reset1Button"), c);
+        c.insets = new Insets(5, 10, 5, 10);
+        c.gridwidth = 3;
+        c.gridy = 1;
+        c.gridx = 0;
+        c.weightx = 1.0;
+        panels.get("top2").add(buttons.get("userSelectButton"), c);
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.gridy = 2;
+        panels.get("top2").add(labels.get("userNameLabel"), c);
+        c.gridy = 3;
+        panels.get("top2").add(labels.get("chipsLabel"), c);
+        c.gridy = 4;
+        panels.get("top2").add(labels.get("winStatLabel"), c);
+        c.gridy = 5;
+        panels.get("top2").add(labels.get("drawStatLabel"), c);
+        c.gridy = 6;
+        panels.get("top2").add(labels.get("loseStatLabel"), c);
+        c.gridy = 7;
+        panels.get("top2").add(labels.get("betAmountLabel"), c);
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.CENTER;
 
         panels.put("bottom", new JPanel());
         panels.get("bottom").setBackground(Color.green);
@@ -236,7 +273,6 @@ public class DisplayFrame extends JFrame {
         panels.put("playerCard", new JPanel());
         panels.get("playerCard").setOpaque(false);
         panels.get("playerCard").setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
         panels.get("playerCard").add(panels.get("titlePanel"), c);
@@ -274,12 +310,26 @@ public class DisplayFrame extends JFrame {
         panels.get("loseCard").add(panels.get("losePanel"));
         panels.get("loseCard").setBounds(0,0,1280,720);
 
+        panels.put("betCard", new JPanel(new GridBagLayout()));
+        panels.get("betCard").setOpaque(false);
+        c.gridx = 0;
+        c.gridy = 0;
+        panels.get("betCard").add(labels.get("betLabel"), c);
+        c.gridy = 1;
+        panels.get("betCard").add(Box.createRigidArea(new Dimension(0, 10)), c);
+        c.gridy = 2;
+        panels.get("betCard").add(betField, c);
+        c.gridy = 3;
+        panels.get("betCard").add(betButton, c);
+        panels.get("betCard").setBounds(0,0,1280,720);
+
         panels.get("mainPanel").add("playerCard", panels.get("playerCard"));
         panels.get("mainPanel").add("registerCard", panels.get("registerCard"));
         panels.get("mainPanel").add("gameCard", panels.get("gameCard"));
         panels.get("mainPanel").add("winCard", panels.get("winCard"));
         panels.get("mainPanel").add("drawCard", panels.get("drawCard"));
         panels.get("mainPanel").add("loseCard", panels.get("loseCard"));
+        panels.get("mainPanel").add("betCard", panels.get("betCard"));
 
         cl.show(panels.get("mainPanel"), "playerCard");
 
@@ -345,6 +395,10 @@ public class DisplayFrame extends JFrame {
         registerConfirmButton.addActionListener(listener);
     }
 
+    public void addBetButtonListener(ActionListener listener) {
+        betButton.addActionListener(listener);
+    }
+
     public void addLabelIntoNumberedPanel(String panelName, JLabel label){
         panels.get(panelName).add(label);
     }
@@ -353,7 +407,7 @@ public class DisplayFrame extends JFrame {
     public void reset() {
         panels.get("top1").removeAll();
         panels.get("bottom").removeAll();
-        cl.show(panels.get("mainPanel"), "gameCard");
+        cl.show(panels.get("mainPanel"), "betCard");
     }
 
     //Abstracts the call to show cards in the layout
@@ -366,9 +420,12 @@ public class DisplayFrame extends JFrame {
         panels.get("top1").remove(1);
     }
 
+    public int getBetAmount() throws NumberFormatException {
+        return Integer.parseInt(betField.getText());
+    }
+
     public void updateNameLabel(String name) {
-        String newString = "Username: " + name;
-        labels.get("userNameLabel").setText(newString);
+        labels.get("userNameLabel").setText(name);
     }
 
     public void updateChips(int chips) {
@@ -376,13 +433,15 @@ public class DisplayFrame extends JFrame {
         labels.get("chipsLabel").setText(newString);
     }
 
-    public void updateStats(int wins, int draws, int loses) {
+    public void updateStats(int wins, int draws, int loses, int bet) {
         String newString = "Wins: " + wins + "\n";
         labels.get("winStatLabel").setText(newString);
         newString = "Draws: " + draws + "\n";
         labels.get("drawStatLabel").setText(newString);
         newString = "Loses: " + loses + "\n";
         labels.get("loseStatLabel").setText(newString);
+        newString = "Bet: " + bet + "\n";
+        labels.get("betAmountLabel").setText(newString);
     }
 
 }

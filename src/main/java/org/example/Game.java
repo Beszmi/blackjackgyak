@@ -6,7 +6,7 @@ import java.util.*;
 
 import static java.lang.Math.round;
 import static java.lang.Math.toIntExact;
-import static org.example.config.*;
+import static org.example.Config.*;
 
 public class Game {
     private final DisplayFrame frame;
@@ -19,10 +19,10 @@ public class Game {
     private int dealerValue = 0;
     private int playerAceCount = 0;
     private int dealerAceCount = 0;
-    private int betAmount = 10;
+    private int betAmount;
 
-    public Game(DisplayFrame sajatFrame) {
-        frame = sajatFrame;
+    public Game(DisplayFrame displayFrame) {
+        frame = displayFrame;
         players = Player.deSerializePlayers();
 
         //Game connected GUI objects setup
@@ -50,12 +50,13 @@ public class Game {
         SwingUtilities.updateComponentTreeUI(frame);
 
         //Button functions
-        frame.addPlayListener(e -> frame.showCard("gameCard"));
+        frame.addPlayListener(e -> frame.showCard("betCard"));
         frame.addHitListener(e -> playerHit());
         frame.addStandListener(e -> dealerAi());
         frame.adduserSelectListener(e -> frame.showCard("playerCard"));
         frame.addResetListener(e -> reset());
         frame.addRegisterListener(e -> frame.showCard("registerCard"));
+        frame.addBetButtonListener(e -> betHandler());
 
         //Saving logic
         frame.setShutdownHandler(shouldSave -> {
@@ -88,7 +89,7 @@ public class Game {
         updateAll();
         frame.updateNameLabel(currentPlayer.getName());
         frame.updateChips(currentPlayer.getChips());
-        frame.updateStats(currentPlayer.getWins(), currentPlayer.getDraws(), currentPlayer.getLosses());
+        frame.updateStats(currentPlayer.getWins(), currentPlayer.getDraws(), currentPlayer.getLosses(), betAmount);
     }
 
     public void reset () {
@@ -193,7 +194,7 @@ public class Game {
         Timer timer = new Timer(750, null); //Swing timer not main thread sleep for the UI
 
         timer.addActionListener(e -> {
-            if (calculateSoftValue(dealerValue, dealerAceCount) < dealerStandValue && dealerValue < playerValue) {
+            if (calculateSoftValue(dealerValue, dealerAceCount) < DEALER_STAND_VALUE && dealerValue < playerValue) {
                 dealerHit();
             } else { // after there's no more dealer hits do:
                 timer.stop();
@@ -225,7 +226,7 @@ public class Game {
     public void win() {
         frame.showCard("winCard");
         currentPlayer.setWins(currentPlayer.getWins() + 1);
-        currentPlayer.setChips((toIntExact(round(currentPlayer.getChips() + betAmount * payoutAmount))));
+        currentPlayer.setChips((toIntExact(round(currentPlayer.getChips() + betAmount * PAYOUT_AMOUNT))));
     }
 
     public void draw() {
@@ -255,7 +256,7 @@ public class Game {
             currentPlayer = players.get(playerName);
             frame.updateNameLabel(currentPlayer.getName());
             frame.updateChips(currentPlayer.getChips());
-            frame.updateStats(currentPlayer.getWins(), currentPlayer.getDraws(), currentPlayer.getLosses());
+            frame.updateStats(currentPlayer.getWins(), currentPlayer.getDraws(), currentPlayer.getLosses(), betAmount);
             SwingUtilities.updateComponentTreeUI(frame);
         }
     }
@@ -267,6 +268,21 @@ public class Game {
         } else {
             JOptionPane.showMessageDialog(frame, "Player " + playerName + " already exists", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
+        }
+    }
+
+    public void betHandler() {
+        try {
+            betAmount = frame.getBetAmount();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Invalid value: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if  (currentPlayer.getChips()-betAmount < 0) {
+            JOptionPane.showMessageDialog(frame, "Not enough chips!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            frame.showCard("gameCard");
         }
     }
 }
