@@ -4,7 +4,7 @@ Main menu:
 <img width="946" height="534" alt="githubreadme" src="https://github.com/user-attachments/assets/1d93a393-263c-431f-988e-03b5484cb031" />
 
 Ingame:
-<img width="1892" height="1062" alt="kép" src="https://github.com/user-attachments/assets/e42324e9-314f-40d6-bc48-84f82289229a" />
+<img width="1891" height="1067" alt="kép" src="https://github.com/user-attachments/assets/365848d3-065b-40b7-b65c-93b937472591" />
 
 **Current features:**
 - Fully functioning blackjack gameplay
