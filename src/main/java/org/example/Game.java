@@ -90,9 +90,10 @@ public class Game {
         frame.updateNameLabel(currentPlayer.getName());
         frame.updateChips(currentPlayer.getChips());
         frame.updateStats(currentPlayer.getWins(), currentPlayer.getDraws(), currentPlayer.getLosses(), betAmount);
+        SwingUtilities.updateComponentTreeUI(frame);
     }
 
-    public void reset () {
+    public void reset() {
         playersCards = new CardHolder();
         dealer = new CardHolder();
         ch = new CardHolder();
