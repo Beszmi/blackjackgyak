@@ -136,6 +136,12 @@ public class DisplayFrame extends JFrame {
         labels.get("winLabel").setFont(new Font("Arial", Font.BOLD, 72));
         labels.get("winLabel").setForeground(Color.green);
 
+        labels.put("BJLabel", new JLabel("BlackJack!"));
+        labels.get("BJLabel").setFocusable(false);
+        labels.get("BJLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
+        labels.get("BJLabel").setFont(new Font("Arial", Font.BOLD, 128));
+        labels.get("BJLabel").setForeground(Color.green);
+
         labels.put("drawLabel", new JLabel("DRAW!"));
         labels.get("drawLabel").setFocusable(false);
         labels.get("drawLabel").setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -188,6 +194,7 @@ public class DisplayFrame extends JFrame {
         buttons.put("reset2Button", new ResetButton());
         buttons.put("reset3Button", new ResetButton());
         buttons.put("reset4Button", new ResetButton());
+        buttons.put("reset5Button", new ResetButton());
 
         //Panels
         panels.put("titlePanel", new JPanel());
@@ -269,6 +276,14 @@ public class DisplayFrame extends JFrame {
         panels.get("losePanel").add(Box.createRigidArea(new Dimension(0, 10)));
         panels.get("losePanel").add(buttons.get("reset4Button"));
 
+        panels.put("BJPanel", new JPanel());
+        panels.get("BJPanel").setLayout(new BoxLayout(panels.get("BJPanel"), BoxLayout.Y_AXIS));
+        panels.get("BJPanel").setOpaque(false);
+        panels.get("BJPanel").setPreferredSize(new Dimension(1280, 720));
+        panels.get("BJPanel").add(labels.get("BJLabel"));
+        panels.get("BJPanel").add(Box.createRigidArea(new Dimension(0, 10)));
+        panels.get("BJPanel").add(buttons.get("reset5Button"));
+
         //Cards
         panels.put("playerCard", new JPanel());
         panels.get("playerCard").setOpaque(false);
@@ -310,6 +325,11 @@ public class DisplayFrame extends JFrame {
         panels.get("loseCard").add(panels.get("losePanel"));
         panels.get("loseCard").setBounds(0,0,1280,720);
 
+        panels.put("BJCard", new JPanel(new GridBagLayout()));
+        panels.get("BJCard").setOpaque(false);
+        panels.get("BJCard").add(panels.get("BJPanel"));
+        panels.get("BJCard").setBounds(0,0,1280,720);
+
         panels.put("betCard", new JPanel(new GridBagLayout()));
         panels.get("betCard").setOpaque(false);
         c.gridx = 0;
@@ -330,6 +350,7 @@ public class DisplayFrame extends JFrame {
         panels.get("mainPanel").add("drawCard", panels.get("drawCard"));
         panels.get("mainPanel").add("loseCard", panels.get("loseCard"));
         panels.get("mainPanel").add("betCard", panels.get("betCard"));
+        panels.get("mainPanel").add("BJCard", panels.get("BJCard"));
 
         cl.show(panels.get("mainPanel"), "playerCard");
 
@@ -362,6 +383,7 @@ public class DisplayFrame extends JFrame {
         buttons.get("reset2Button").addActionListener(listener);
         buttons.get("reset3Button").addActionListener(listener);
         buttons.get("reset4Button").addActionListener(listener);
+        buttons.get("reset5Button").addActionListener(listener);
     }
 
     public void setPlayerList(String[] names) {

@@ -225,9 +225,16 @@ public class Game {
     }
 
     public void win() {
-        frame.showCard("winCard");
-        currentPlayer.setWins(currentPlayer.getWins() + 1);
-        currentPlayer.setChips((toIntExact(round(currentPlayer.getChips() + betAmount * PAYOUT_AMOUNT))));
+        if (playersCards.getCards().size() == 2 && playerAceCount == 1 && finalValue(playerValue, playerAceCount) == 21) {
+            System.out.println("Blackjack!");
+            frame.showCard("BJCard");
+            currentPlayer.setWins(currentPlayer.getWins() + 1);
+            currentPlayer.setChips((toIntExact(currentPlayer.getChips() + betAmount * 2L)));
+        } else {
+            frame.showCard("winCard");
+            currentPlayer.setWins(currentPlayer.getWins() + 1);
+            currentPlayer.setChips((toIntExact(round(currentPlayer.getChips() + betAmount * PAYOUT_AMOUNT))));
+        }
     }
 
     public void draw() {
@@ -285,5 +292,6 @@ public class Game {
         } else {
             frame.showCard("gameCard");
         }
+        SwingUtilities.updateComponentTreeUI(frame);
     }
 }
