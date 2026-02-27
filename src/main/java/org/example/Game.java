@@ -292,6 +292,7 @@ public class Game {
         } else {
             frame.showCard("gameCard");
         }
+        frame.updateStats(currentPlayer.getWins(), currentPlayer.getDraws(), currentPlayer.getLosses(), betAmount);
         SwingUtilities.updateComponentTreeUI(frame);
     }
 }
